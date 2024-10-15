@@ -1,7 +1,8 @@
 local QBCore = exports['qb-core']:GetCoreObject()
+
 local headMask = false
-BaggedPlayer = nil
 local handcuffed = false
+local baggedPlayer
 
 RegisterNetEvent('fd_headbag:RemoveHeadBag', function(player)
     DeleteEntity(Object)
@@ -46,26 +47,26 @@ RegisterNetEvent("fd_headbag:CheckThread", function()
                         TriggerServerEvent("fd_headbag:serverAdd", GetPlayerServerId(closestPlayer))
                         exports['rpemotes']:EmoteCancel(true)
                         headMask = true
-                        BaggedPlayer = GetPlayerServerId(closestPlayer)
+                        baggedPlayer = GetPlayerServerId(closestPlayer)
                     else
-                        TriggerEvent("QBCore:Notify", "Il giocatore deve avere le mani in alto o deve essere ammanettato per farlo", "error")
+                        TriggerEvent("QBCore:Notify", Locales[Config.lang].nohandsup, "error")
                     end
                 else
                     local closestPlayerRemove = lib.getClosestPlayer(GetEntityCoords(PlayerPedId()), 1, false)
-                    if GetPlayerServerId(closestPlayerRemove) == BaggedPlayer then
+                    if GetPlayerServerId(closestPlayerRemove) == baggedPlayer then
                         exports['rpemotes']:EmoteCommandStart("damn2", 0)
                         Wait(500)
-                        TriggerServerEvent("fd_headbag:serverRemove", BaggedPlayer)
+                        TriggerServerEvent("fd_headbag:serverRemove", baggedPlayer)
                         Wait(500)
                         exports['rpemotes']:EmoteCancel(true)
                         headMask = false
                     else
-                        TriggerEvent("QBCore:Notify", "Puoi togliere il sacchetto solo a chi lo hai gia messo", "error")
+                        TriggerEvent("QBCore:Notify", Locales[Config.lang].nobag, "error")
                     end
                 end
             end
         end, GetPlayerServerId(closestPlayer))
     else
-        TriggerEvent("QBCore:Notify", "Nessun giocatore vicino", "error")
+        TriggerEvent("QBCore:Notify", Locales[Config.lang].noonenearby, "error")
     end
 end)
