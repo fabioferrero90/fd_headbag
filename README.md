@@ -1,4 +1,4 @@
-Headbag Script for FiveM (QBCore)
+Headbag Script for FiveM (QBCore\ESX (WorkInProgress)\Standalone)
 ===
 
 <img src="https://i.imgur.com/q7AvK8J.png">

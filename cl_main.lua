@@ -16,7 +16,15 @@ end)
 RegisterNetEvent("fd_headbag:StartThread", function(player)
     local ped = PlayerPedId()
     local handsup = exports["rpemotes"]:IsPlayerInHandsUp(ped)
-    local handcuffed = QBCore.Functions.GetPlayerData().metadata.ishandcuffed
+    local handcuffed = false
+    if Config.framework == "qb" then
+        handcuffed = QBCore.Functions.GetPlayerData().metadata.ishandcuffed
+    elseif Config.framework == "esx" then
+        -- WORK IN PROGRESS
+        handcuffed = true
+    elseif Config.framework == "standalone" then
+        handcuffed = true
+    end
     if handsup or handcuffed then
         Object = CreateObject(GetHashKey("prop_money_bag_01"), 0, 0, 0, true, true, true)
         AttachEntityToEntity(Object, ped, GetPedBoneIndex(ped, 12844), 0.2, 0.04, 0, 0, 270.0, 60.0, true, true, false, true, 1, true)
@@ -34,11 +42,23 @@ AddEventHandler("playerSpawned", function()
     headMask = false;
 end)
 
+function Notify(message, type)
+    if Config.framework == "qb" then
+        TriggerEvent("QBCore:Notify", message, type)
+    elseif Config.framework == "esx" then
+        TriggerEvent('esx:showNotification', message, type, 5000)
+    elseif Config.framework == "standalone" then
+        SetTextComponentFormat("STRING")
+        AddTextComponentString(message)
+        EndTextCommandDisplayHelp(0, 0, 0, -1)
+    end
+end
+
 RegisterNetEvent("fd_headbag:CheckThread", function()
     local closestPlayer = lib.getClosestPlayer(GetEntityCoords(PlayerPedId()), 1, false)
     if GetPlayerServerId(closestPlayer) ~= 0 then
         local handsup = IsEntityPlayingAnim(GetPlayerPed(closestPlayer), "random@mugging3", "handsup_standing_base", 1)
-        QBCore.Functions.TriggerCallback("fd_headbag:server:GetCuffState", function(handcuffed)
+        lib.callback('fd_headbag:server:GetCuffState', false, function(handcuffed)
             if handcuffed ~= nil then
                 if not headMask then
                     if handsup or handcuffed then
@@ -49,7 +69,7 @@ RegisterNetEvent("fd_headbag:CheckThread", function()
                         headMask = true
                         baggedPlayer = GetPlayerServerId(closestPlayer)
                     else
-                        TriggerEvent("QBCore:Notify", Locales[Config.lang].nohandsup, "error")
+                        Notify(Locales[Config.lang].nohandsup, "error")
                     end
                 else
                     local closestPlayerRemove = lib.getClosestPlayer(GetEntityCoords(PlayerPedId()), 1, false)
@@ -61,12 +81,12 @@ RegisterNetEvent("fd_headbag:CheckThread", function()
                         exports['rpemotes']:EmoteCancel(true)
                         headMask = false
                     else
-                        TriggerEvent("QBCore:Notify", Locales[Config.lang].nobag, "error")
+                        Notify(Locales[Config.lang].nobag, "error")
                     end
                 end
             end
         end, GetPlayerServerId(closestPlayer))
     else
-        TriggerEvent("QBCore:Notify", Locales[Config.lang].noonenearby, "error")
+        Notify(Locales[Config.lang].noonenearby, "error")
     end
 end)
