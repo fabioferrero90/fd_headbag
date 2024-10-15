@@ -4,15 +4,6 @@ local headMask = false
 local handcuffed = false
 local baggedPlayer
 
-RegisterNetEvent('fd_headbag:RemoveHeadBag', function(player)
-    DeleteEntity(Object)
-    SetEntityAsNoLongerNeeded(Object)
-    SendNUIMessage({
-        ["action"] = "remove"
-    })
-    headMask = false;
-end)
-
 RegisterNetEvent("fd_headbag:StartThread", function(player)
     local ped = PlayerPedId()
     local handsup = exports["rpemotes"]:IsPlayerInHandsUp(ped)
@@ -34,6 +25,15 @@ RegisterNetEvent("fd_headbag:StartThread", function(player)
         })
         headMask = true;
     end
+end)
+
+RegisterNetEvent('fd_headbag:RemoveHeadBag', function(player)
+    DeleteEntity(Object)
+    SetEntityAsNoLongerNeeded(Object)
+    SendNUIMessage({
+        ["action"] = "remove"
+    })
+    headMask = false;
 end)
 
 AddEventHandler("playerSpawned", function()
