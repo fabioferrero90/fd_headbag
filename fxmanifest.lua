@@ -7,10 +7,13 @@ version "1.0.1"
 
 client_script "cl_main.lua"
 server_script "sv_main.lua"
-shared_script "@ox_lib/init.lua"
+shared_script {
+    "@ox_lib/init.lua",
+    "config.lua"
+}
 
-ui_page "interface/interface.html"
+ui_page "ui/index.html"
 
 files {
-    "interface/*",
+    "ui/*",
 }
