@@ -15,6 +15,7 @@ Compatible with OneSync
 - <a href="https://github.com/alberttheprince/rpemotes-reborn">rpemotes</a>
 
 ---
+Proudly made in Italy 🇮🇹
 
 Seen on Cult Roleplay Server: <strong>https://discord.gg/cultrp</strong>
 
